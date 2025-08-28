@@ -1,7 +1,16 @@
 # keyspace-2025
 
 ---
-What is a Timeseries Database?
+## Who Am I?
+
+I’m Clayton Collie, an independent developer and long time open-source contributor, now a contributor to the Valkey Project.
+
+## What Is ValkeyTimeSeries?
+
+ValkeyTimeSeries is a high-performance, scalable time series database built as a module for ValkeyDB. It is designed to handle large volumes of time-stamped data with low latency and high throughput, making it ideal for applications such as monitoring, IoT, and real-time analytics.
+
+---
+## What is a Timeseries Database?
 A timeseries database is a type of database optimized for storing and querying data that is indexed by time. This type of database is particularly useful for applications that generate large amounts of time-stamped data, such as monitoring systems, financial applications, and IoT devices.
 
 A timeseries measures `metrics`. A metric is an observation of some value at some point in time. Metrics consist of the following parts:
@@ -14,8 +23,21 @@ A timeseries measures `metrics`. A metric is an observation of some value at som
 * Timestamp - The time the observation was recorded.
 A combination of a metric name and its metadata defines a time series. In the real world, one could expect millions of unique time series to be processed and stored in a TSDB for a moderate load.
 
+### You'll find TSDBs at the heart of:
+
+* Monitoring & Observability: Server metrics, application performance monitoring (APM), network data.
+
+* IoT & Sensor Data: Smart home devices, industrial sensor networks, vehicle telemetry.
+
+* Financial Analytics: Stock ticker prices, trading volumes, algorithmic trading.
+
+* Application Analytics: User activity events, clickstreams, ad performance tracking.
+
+* Environmental Data: Weather stations, smart agriculture, energy grid management.
+
+
 ---
-## Improvements over RedisTimeseries. (12)
+## Improvements over RedisTimeseries.
 ValkeyTimeSeries is a intended as a drop-in replacement for RedisTimeseries, with a focus on performance, scalability, and usability. Here are some of the key improvements:
 
 ### Active Expiration
@@ -69,11 +91,18 @@ We also support`"OR"` matching for Prometheus style selectors. For example:
 
 - `TS.QUERYINDEX queue{job="app1",env="prod" or job="app2",env="dev"}` will return the series with the `{job="app1",env="prod"}` or `{job="app2",env="dev"}` labels.
 
-## Metadata Commands
+### Metadata Commands
 
 Support for returning cross-series index metadata (label names, label values, cardinality)
 
-Ex - label values example
+e.g. To get the top 10 label names for series matching a filter:
+```bash
+TS.LABELNAMES TS.LABELNAMES LIMIT 10 FILTER up process_start_time_seconds{job="prometheus"}
+
+1) "__name__",
+2) "instance",
+3) "job"
+```
 
 ### Developer Ergonomics
 
@@ -96,10 +125,6 @@ ordered, non-overlapping time intervals. Each chunk consists of multiple samples
 a 64bit timestamp and a 64bit float.
 
 Labels: A list of Label objects, providing metadata about the time series. Each label consists of a name-value pair.
-
----
-## Chunks
-
 
 ---
 ## Indexes
